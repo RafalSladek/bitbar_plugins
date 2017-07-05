@@ -19,8 +19,8 @@
 # h = high array(<today>, <last 24 hours>),
 # o = today's opening price
 
-val=$(curl -s "https://api.kraken.com/0/public/Ticker?pair=ETHEUR" | tr -d '{}"[]' | tr ':,' '\n' | grep -A1 "^c$" | tail -1)
+ether=$(curl -s "https://api.kraken.com/0/public/Ticker?pair=ETHEUR" | tr -d '{}"[]' | tr ':,' '\n' | grep -A1 "^c$" | tail -1)
 
-echo "$(printf "𝚵 %.3f \n" "$val") | size=13"
+echo "$(printf "𝚵 %.3f \n" "$ether") | size=13"
 echo "---"
 echo "Kraken.com | href=\"https://www.kraken.com/\""
