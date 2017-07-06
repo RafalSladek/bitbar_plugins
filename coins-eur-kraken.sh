@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# <bitbar.title>Kraken.com ETHEUR last price</bitbar.title>
+# <bitbar.title>Kraken.com XBTEUR last price</bitbar.title>
 # <bitbar.version>v1.0</bitbar.version>
-# <bitbar.author>G.G.</bitbar.author>
-# <bitbar.author.github>ggrelet</bitbar.author.github>
-# <bitbar.desc>Gives the last price of ether to euro from Kraken.com</bitbar.desc>
+# <bitbar.author>R.S.</bitbar.author>
+# <bitbar.author.github>rafalsladek</bitbar.author.github>
+# <bitbar.desc>Gives the last price of bitcoin to euro from Kraken.com</bitbar.desc>
 # <bitbar.image>https://i.imgur.com/iGX2yjR.png</bitbar.image>
 # <bitbar.dependencies>bash</bitbar.dependencies>
 
@@ -19,8 +19,11 @@
 # h = high array(<today>, <last 24 hours>),
 # o = today's opening price
 
+bitcoin=$(curl -s "https://api.kraken.com/0/public/Ticker?pair=XBTEUR" | tr -d '{}"[]' | tr ':,' '\n' | grep -A1 "^c$" | tail -1)
+
 ether=$(curl -s "https://api.kraken.com/0/public/Ticker?pair=ETHEUR" | tr -d '{}"[]' | tr ':,' '\n' | grep -A1 "^c$" | tail -1)
 
 echo "$(printf "𝚵 %.3f \n" "$ether") | size=13"
+echo "$(printf "₿ %.3f \n" "$bitcoin") | size=13"
 echo "---"
 echo "Kraken.com | href=\"https://www.kraken.com/\""
