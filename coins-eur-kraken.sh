@@ -20,10 +20,11 @@
 # o = today's opening price
 
 bitcoin=$(curl -s "https://api.kraken.com/0/public/Ticker?pair=XBTEUR" | tr -d '{}"[]' | tr ':,' '\n' | grep -A1 "^c$" | tail -1)
-
 ether=$(curl -s "https://api.kraken.com/0/public/Ticker?pair=ETHEUR" | tr -d '{}"[]' | tr ':,' '\n' | grep -A1 "^c$" | tail -1)
+zcash=$(curl -s "https://api.kraken.com/0/public/Ticker?pair=ZECEUR" | tr -d '{}"[]' | tr ':,' '\n' | grep -A1 "^c$" | tail -1)
 
-echo "$(printf "𝚵 %.3f €\n" "$ether") | size=13"
-echo "$(printf "₿ %.3f €\n" "$bitcoin") | size=13"
+echo "$(printf "𝚵 %.2f €\n" "$ether") | size=13"
+echo "$(printf "₿ %.2f €\n" "$bitcoin") | size=13"
+echo "$(printf "ⓩ %.2f €\n" "$zcash") | size=13"
 echo "---"
 echo "Kraken.com | href=\"https://www.kraken.com/\""
