@@ -18,8 +18,16 @@ locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 # h = high array(<today>, <last 24 hours>),
 # o = today's opening price
 
-def getUrl(x, z):
-    return str("https://api.kraken.com/0/public/Ticker?pair=" + makePair(x, z))
+def getUrl(parameters):
+    return str("https://api.kraken.com/0/public/Ticker?pair=" + parameters)
+
+
+def getParameters(all_pairs):
+    l = []
+    for (crypto_currency, fiat_currency, coin_symbol) in all_pairs:
+        l.append(str(makePair(crypto_currency, fiat_currency)))
+
+    return ','.join(l)
 
 
 def makeResultPair(x, z):
@@ -33,15 +41,18 @@ def makePair(x, z):
     return str(x + z)
 
 
-def getResponse(x, z):
-    current_url = getUrl(x, z)
-    # print currentUrl
+def getResponse(all_pairs):
+    current_url = getUrl(getParameters(all_pairs))
+    # print current_url
     data = requests.get(current_url).json()
-    # print data
-    symbol = makeResultPair(x, z)
-    # print symbol
-    price_str = data['result']['%s' % symbol]['c'][0]
-    return price_str
+    result = []
+    for (crypto_currency, fiat_currency, coin_symbol) in all_pairs:
+       # print data
+        symbol = makeResultPair(crypto_currency, fiat_currency)
+        # print symbol
+        result.append(formatPrice(
+            data['result']['%s' % symbol]['c'][0], coin_symbol))
+    return result
 
 
 def formatPrice(unformatted_price, coin_symbol):
@@ -51,16 +62,13 @@ def formatPrice(unformatted_price, coin_symbol):
 
 
 def formatToBitBar(output):
-    return str(output + "\n")
+    return str(output)
 
 
 def getAllPrices(all_pairs):
-    for (crypto_currency, fiat_currency, coin_symbol) in all_pairs:
-        try:
-            price_str = getResponse(crypto_currency, fiat_currency)
-            print formatToBitBar(formatPrice(price_str, coin_symbol))
-        except:
-            pass
+    result = getResponse(all_pairs)
+    for price in result:
+        print formatToBitBar(price)
 
 
 def run():
