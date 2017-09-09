@@ -23,7 +23,10 @@ def getUrl(x, z):
 
 
 def makeResultPair(x, z):
-    return str('X' + x + 'Z' + z)
+    if (x == 'BCH'):
+        return str(x + z)
+    else:
+        return str('X' + x + 'Z' + z)
 
 
 def makePair(x, z):
