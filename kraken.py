@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # coding: utf8
-import requests
-import sys
-import json
 import locale
-locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
+import requests
+from currency import Currency
+from pair import Pair
 
+locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 
 # <pair_name> = pair name
 # a = ask array(<price>, <whole lot volume>, <lot volume>),
@@ -18,27 +18,28 @@ locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 # h = high array(<today>, <last 24 hours>),
 # o = today's opening price
 
+
 def getUrl(parameters):
     return str("https://api.kraken.com/0/public/Ticker?pair=" + parameters)
 
 
 def getParameters(all_pairs):
-    l = []
-    for (crypto_currency, fiat_currency, coin_symbol) in all_pairs:
-        l.append(str(makePair(crypto_currency, fiat_currency)))
+    pairs = []
+    for (pair) in all_pairs:
+        pairs.append(makePair(pair))
 
-    return ','.join(l)
+    return ','.join(pairs)
 
 
-def makeResultPair(x, z):
-    if (x == 'BCH'):
-        return str(x + z)
+def makeResultPair(pair):
+    if (pair.crypto.code == 'BCH'):
+        return makePair(pair)
     else:
-        return str('X' + x + 'Z' + z)
+        return str('X' + pair.crypto.code + 'Z' + pair.fiat.code)
 
 
-def makePair(x, z):
-    return str(x + z)
+def makePair(pair):
+    return str(pair.crypto.code + pair.fiat.code)
 
 
 def getResponse(all_pairs):
@@ -46,19 +47,20 @@ def getResponse(all_pairs):
     # print current_url
     data = requests.get(current_url).json()
     result = []
-    for (crypto_currency, fiat_currency, coin_symbol) in all_pairs:
+    for (pair) in all_pairs:
        # print data
-        symbol = makeResultPair(crypto_currency, fiat_currency)
+        symbol = makeResultPair(pair)
         # print symbol
         result.append(formatPrice(
-            data['result']['%s' % symbol]['c'][0], coin_symbol))
+            data['result']['%s' % symbol]['c'][0], pair))
     return result
 
 
-def formatPrice(unformatted_price, coin_symbol):
+def formatPrice(unformatted_price, pair):
     price = locale.currency(float(unformatted_price),
                             symbol=False, grouping=True)
-    return str(coin_symbol + " " + price + " €")
+    result = [pair.crypto.symbol, price, pair.fiat.symbol]
+    return str(" ".join(result))
 
 
 def formatToBitBar(output):
@@ -72,8 +74,23 @@ def getAllPrices(all_pairs):
 
 
 def run():
-    list_of_tuples = [['ETH', 'EUR', '𝚵'], ['XMR', 'EUR', 'Ⓜ'], ['ZEC', 'EUR', 'ⓩ'], [
-        'LTC', 'EUR', 'Ł'], ['BCH', 'EUR', '฿'], ['XBT', 'EUR', '₿']]
+
+    list_of_tuples = []
+    eth = Currency('ETH', '𝚵')
+    euro = Currency('EUR', '€')
+    btc = Currency('XBT', '₿')
+    xmr = Currency('XMR', 'Ⓜ')
+    zec = Currency('ZEC', 'ⓩ')
+    ltc = Currency('LTC', 'Ł')
+    bch = Currency('BCH', '฿')
+
+    list_of_tuples.append(Pair(eth, euro))
+    list_of_tuples.append(Pair(btc, euro))
+    list_of_tuples.append(Pair(xmr, euro))
+    list_of_tuples.append(Pair(zec, euro))
+    list_of_tuples.append(Pair(ltc, euro))
+    list_of_tuples.append(Pair(bch, euro))
+
     getAllPrices(list_of_tuples)
 
 
