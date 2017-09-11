@@ -2,10 +2,18 @@
 # coding: utf8
 import locale
 import requests
-from currency import Currency
-from pair import Pair
 
 locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
+
+class Pair():
+    def __init__(self, crypto, fiat):
+        self.crypto = crypto
+        self.fiat = fiat
+
+class Currency():
+    def __init__(self, code, symbol):
+        self.code = code
+        self.symbol = symbol
 
 # <pair_name> = pair name
 # a = ask array(<price>, <whole lot volume>, <lot volume>),
@@ -47,7 +55,7 @@ def getResponse(all_pairs):
     # print current_url
     data = requests.get(current_url).json()
     result = []
-    for (pair) in all_pairs:
+    for pair in all_pairs:
        # print data
         symbol = makeResultPair(pair)
         # print symbol
