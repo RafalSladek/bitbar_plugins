@@ -5,10 +5,12 @@ import requests
 
 locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 
+
 class Pair():
     def __init__(self, crypto, fiat):
         self.crypto = crypto
         self.fiat = fiat
+
 
 class Currency():
     def __init__(self, code, symbol):
@@ -82,24 +84,26 @@ def getAllPrices(all_pairs):
 
 
 def run():
+    try:
+        list_of_tuples = []
+        eth = Currency('ETH', '𝚵')
+        euro = Currency('EUR', '€')
+        btc = Currency('XBT', '₿')
+        xmr = Currency('XMR', 'Ⓜ')
+        zec = Currency('ZEC', 'ⓩ')
+        ltc = Currency('LTC', 'Ł')
+        bch = Currency('BCH', '฿')
 
-    list_of_tuples = []
-    eth = Currency('ETH', '𝚵')
-    euro = Currency('EUR', '€')
-    btc = Currency('XBT', '₿')
-    xmr = Currency('XMR', 'Ⓜ')
-    zec = Currency('ZEC', 'ⓩ')
-    ltc = Currency('LTC', 'Ł')
-    bch = Currency('BCH', '฿')
+        list_of_tuples.append(Pair(eth, euro))
+        list_of_tuples.append(Pair(btc, euro))
+        list_of_tuples.append(Pair(xmr, euro))
+        list_of_tuples.append(Pair(zec, euro))
+        list_of_tuples.append(Pair(ltc, euro))
+        list_of_tuples.append(Pair(bch, euro))
 
-    list_of_tuples.append(Pair(eth, euro))
-    list_of_tuples.append(Pair(btc, euro))
-    list_of_tuples.append(Pair(xmr, euro))
-    list_of_tuples.append(Pair(zec, euro))
-    list_of_tuples.append(Pair(ltc, euro))
-    list_of_tuples.append(Pair(bch, euro))
-
-    getAllPrices(list_of_tuples)
+        getAllPrices(list_of_tuples)
+    except:
+        print "Error..."
 
 
 run()
