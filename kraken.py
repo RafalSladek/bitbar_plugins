@@ -44,6 +44,8 @@ def getParameters(all_pairs):
 def makeResultPair(pair):
     if (pair.crypto.code == 'BCH'):
         return makePair(pair)
+    if (pair.fiat.code == 'XBT'):
+        return str('X' + pair.crypto.code + 'X' + pair.fiat.code)
     else:
         return str('X' + pair.crypto.code + 'Z' + pair.fiat.code)
 
@@ -94,12 +96,12 @@ def run():
         ltc = Currency('LTC', 'Ł')
         bch = Currency('BCH', '฿')
 
-        list_of_tuples.append(Pair(eth, euro))
+        list_of_tuples.append(Pair(eth, btc))
         list_of_tuples.append(Pair(btc, euro))
-        list_of_tuples.append(Pair(xmr, euro))
-        list_of_tuples.append(Pair(zec, euro))
-        list_of_tuples.append(Pair(ltc, euro))
-        list_of_tuples.append(Pair(bch, euro))
+        list_of_tuples.append(Pair(xmr, btc))
+        list_of_tuples.append(Pair(zec, btc))
+        list_of_tuples.append(Pair(ltc, btc))
+        list_of_tuples.append(Pair(bch, btc))
 
         getAllPrices(list_of_tuples)
     except:
