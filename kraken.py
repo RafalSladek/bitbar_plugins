@@ -69,9 +69,8 @@ def getResponse(all_pairs):
 
 
 def formatPrice(unformatted_price, pair):
-    price = locale.currency(float(unformatted_price),
-                            symbol=False, grouping=True)
-    result = [pair.crypto.symbol, price, pair.fiat.symbol]
+    precision_price = "{:.4f}".format(float(unformatted_price))
+    result = [pair.crypto.symbol, precision_price, pair.fiat.symbol]
     return str(" ".join(result))
 
 
@@ -104,7 +103,7 @@ def run():
         list_of_tuples.append(Pair(bch, btc))
 
         getAllPrices(list_of_tuples)
-    except:
+    except Exception, e:
         print "Error..."
 
 
